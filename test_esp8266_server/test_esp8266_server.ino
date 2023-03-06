@@ -79,7 +79,7 @@ void handle_OnConnect() {
   Serial.print("Recu: ");  Serial.println(myTemperature);
   display.print("Recu : ");  display.println(myTemperature); display.display(); 
   
-  server.send(200, "text/html", SendHTML(LED1status,false));
+  server.send(200, "text/html", SendHTML(false));
 }
 
 void handle_NotFound(){
