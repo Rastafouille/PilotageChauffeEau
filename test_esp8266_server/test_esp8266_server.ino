@@ -22,10 +22,12 @@ const char* password = "rastafouille";  //Enter Password here
 ESP8266WebServer server(80);
 
 //"server.arg("Temperature");".
-//http://192.168.1.50/?Temperature=500
+//http://192.168.1.50/?Consigne=500
 
 String st = "";
 unsigned int myTemperature = 0;
+
+const int PinPWM = 15; 
 
 
 void setup() {
@@ -70,14 +72,19 @@ void setup() {
 }
 void loop() {
   server.handleClient();
+  
+
+
+
 }
 
 void handle_OnConnect() {
-  st = server.arg("Temperature");
-  myTemperature = st.toInt();
+  st = server.arg("consigne");
+  myConsigne = st.toInt();
 
-  Serial.print("Recu: ");  Serial.println(myTemperature);
-  display.print("Recu : ");  display.println(myTemperature); display.display(); 
+  Serial.print("Recu: ");  Serial.println(myConsigne);
+  display.print("Recu : ");  display.println(myConsigne); display.display(); 
+  analogWrite(PinPWM, myConsigne);
   
   server.send(200, "text/html", SendHTML(false));
 }
