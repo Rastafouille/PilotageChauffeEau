@@ -103,9 +103,9 @@ void loop() {
   display.print("Puissance : ");  display.print(power); display.print("W");display.display(); 
 
  ecart=myConsigne-power;
- if (ecart > 10)
+ if (ecart > 20)
   {commande+=2;} 
- if (ecart < -10)
+ if (ecart < -20)
   {commande-=2;} 
  if (commande > 255)
   {commande=255;}
@@ -121,6 +121,7 @@ void handle_Set() {
   commande=int(myConsigne/10+100);
   analogWrite(PinPWM, commande);
   //server.send(200, "text/plain", String (myConsigne));
+  server.send(200, "text/plain", "");
 }
 
 void handle_Update() {
