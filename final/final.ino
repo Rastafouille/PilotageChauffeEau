@@ -19,10 +19,12 @@ const char* password = "rastafouille";  //Enter Password here
 ESP8266WebServer server(80);
 
 //"server.arg("consigne");".
-//http://192.168.1.50/?consigne=500
+//http://192.168.1.48/set?consigne=255
 
 String st = "";
 unsigned int myConsigne = 0;
+float commande = 0.0;
+float ecart = 0.0;
 
 const int PinPWM = 15; 
 
@@ -79,6 +81,8 @@ void setup() {
   server.begin();
   display.println("HTTP server started");  display.display(); 
 
+  analogWrite(PinPWM, 0);
+
 }
 void loop() {
   server.handleClient();
@@ -94,20 +98,29 @@ void loop() {
   display.setCursor(0, 10);
   display.print("Connected to ");  display.println(ssid);  display.display(); 
   display.print("IP  ");  display.println(WiFi.localIP());  display.display();
-  display.print("Consigne : ");  display.println(myConsigne); display.display(); 
+  display.print("Consigne : ");  display.print(myConsigne); display.println("W"); display.display();
+  display.print("Commande : ");  display.println(commande); display.display(); 
   display.print("Puissance : ");  display.print(power); display.print("W");display.display(); 
 
- delay(1000);
- ecart=myConsigne-power
- 
- 
-
+ ecart=myConsigne-power;
+ if (ecart > 10)
+  {commande+=2;} 
+ if (ecart < -10)
+  {commande-=2;} 
+ if (commande > 255)
+  {commande=255;}
+ if (commande < 101)
+  {commande=0;}
+ analogWrite(PinPWM, commande);
+ delay(5000);
 }
+
 void handle_Set() {
   st = server.arg("consigne");
   myConsigne = st.toInt();
-  //analogWrite(PinPWM, myConsigne);
-  server.send(200, "text/plain", "");
+  commande=int(myConsigne/10+100);
+  analogWrite(PinPWM, commande);
+  //server.send(200, "text/plain", String (myConsigne));
 }
 
 void handle_Update() {
