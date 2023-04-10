@@ -3,31 +3,39 @@
 #include <Adafruit_GFX.h>
 #include <Adafruit_SSD1306.h>
 
+
+// Variable pour l'écran OLED connectée en I2C (SDA, SCL pins)
 #define SCREEN_WIDTH 128 // OLED display width, in pixels
 #define SCREEN_HEIGHT 64 // OLED display height, in pixels
-
-// Declaration for an SSD1306 display connected to I2C (SDA, SCL pins)
 Adafruit_SSD1306 display(SCREEN_WIDTH, SCREEN_HEIGHT, &Wire, -1);
 
+
+// Bibliotheque ESP8266
 #include <ESP8266WiFi.h>
 #include <ESP8266WebServer.h>
 
-/*Put your SSID & Password*/
-const char* ssid = "Maiz";  // Enter SSID here
-const char* password = "rastafouille";  //Enter Password here
+// paramètres de connection au wifi local
+const char* ssid = "SSID";  // Enter SSID here
+const char* password = "password";  //Enter Password here
 
 ESP8266WebServer server(80);
 
 //"server.arg("consigne");".
 //http://192.168.1.48/set?consigne=255
 
+// variable pour le pilotage en puissance. la consigne est la valeur de puissance demandée, et la commande la valeur entre 0 et 255 de pilotage du régulateur
+// un étalonnage est necessaire pour connaitre le lien entre les deux
 String st = "";
 unsigned int myConsigne = 0;
 float commande = 0.0;
 float ecart = 0.0;
 
+// pin PWM de pilotage du régulateur de tension
 const int PinPWM = 15; 
 
+
+// Paramétrage voltmètre
+// permet de connaitre la valeur de puissance réelle instantanée
 #include <PZEM004Tv30.h>
 #include <SoftwareSerial.h>
 /* Use software serial for the PZEM
@@ -43,9 +51,6 @@ PZEM004Tv30 pzem(pzemSWSerial);
 float voltage = 0.0;
 float current = 0.0;
 float power = 0.0;
-
-
-
 
 void setup() {
   Serial.begin(115200);
@@ -102,6 +107,8 @@ void loop() {
   display.print("Commande : ");  display.println(commande); display.display(); 
   display.print("Puissance : ");  display.print(power); display.print("W");display.display(); 
 
+
+// Pilotage du régulateur de tension
  ecart=myConsigne-power;
  if (ecart > 20)
   {commande+=2;} 
@@ -115,6 +122,7 @@ void loop() {
  delay(5000);
 }
 
+// si une consigne de puissance est récue
 void handle_Set() {
   st = server.arg("consigne");
   myConsigne = st.toInt();
@@ -124,6 +132,7 @@ void handle_Set() {
   server.send(200, "text/plain", "");
 }
 
+// si une demande de retour puissance est demandée
 void handle_Update() {
   server.send(200, "text/plain", String (power));
 }
