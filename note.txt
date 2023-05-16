@@ -1,0 +1,2 @@
+probleme upload nodeMcu --> deinstaller le driver CH340 et reinstaller a partir du .exe
+Probleme connexio arduino nano --> board 328P pas nano 

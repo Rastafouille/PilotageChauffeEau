@@ -1,6 +1,6 @@
 
 L'objectif du projet est de pouvoir piloter en puissance un appareil, ici le chauffe eau, via des requetes http.
-Dans mon cas je l'utilise pour consommer le surplus de puissance généré par mes panneaux photovoltaiques.
+Dans mon cas je l'utilise pour consommer le surplus de puissance généré par mes panneaux photovoltaiques et fonctionner en plus en heures creuses.
 
 Il va falloir 
  - un ESP8266 pour se connecter au réseau, attendre les commandes http et piloter le régulateur de puissance.
@@ -10,7 +10,9 @@ Il va falloir
  - un voltmétre pour connaitre la puissance réelle consommée, permettant d'ajuster la commande en fonction de la consigne
  - un petit ecran pour afficher des infos interressantes
  - voyant, connecteurs 220v et une boite. 
-Tout est monté sur un rail DIN grave a des pièce imprimées en 3D (voir dossier CAD)
+Tout est monté sur un rail DIN grace à des pièces imprimées en 3D (voir dossier CAD)
+Cout total entre 50€ et 100€ selon recup.
+
 
 
 
@@ -37,3 +39,12 @@ Ecran oled (2€)
 <img src="img/3.jpg" width="700"/>
 
 <img src="img/Schema.jpg" width="700"/>
+
+
+Mise à jour 16/05/2023
+
+Le signal PWM de l'ESP8266 sort en 3.3V alors que le régulateur attend du 4V minimum. Cela fonctionne mais pas à pleine puissance, 1000W au lieu de 3000W...
+Pour régler le probléme, un petit montage transistor est necessaire. Attention ce montage inverse également le signal, facile à gerer en soft.
+Voir code de l'ESP8266 modifié dans final-5v
+
+<img src="img/circuitPWM.jpg" width="700"/>
