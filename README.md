@@ -48,3 +48,5 @@ Pour régler le probléme, un petit montage transistor est necessaire. Attention
 Voir code de l'ESP8266 modifié dans final-5v
 
 <img src="img/circuitPWM.jpg" width="700"/>
+
+<img src="img/circuitPWMphoto.jpg" width="700"/>
